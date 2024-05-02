@@ -34,7 +34,7 @@ run_psi_APF <- function(n, psi_pa, N, L, init = TRUE){ #purely filtering particl
     
     for(t in (n-L+2):n){
       
-      if(compute_ESS(w_init[t-1,], is.log=TRUE) <= kappa*N){
+      if(compute_ESS_log(w_init[t-1,], is.log=TRUE) <= kappa*N){
         
         ancestors <- resample(w[t-1,])
         logZ = logZ + normalise_weights_in_log_space(w[t-1,])[[2]]
@@ -83,7 +83,7 @@ run_psi_APF <- function(n, psi_pa, N, L, init = TRUE){ #purely filtering particl
     
     for(t in (n-L+2):n){
       #print(t)
-      if(compute_ESS(w[t-1,], is.log = TRUE) <= kappa*N){
+      if(compute_ESS_log(w[t-1,], is.log = TRUE) <= kappa*N){
         
         ancestors <- resample(w[t-1,])
         logZ = logZ + normalise_weights_in_log_space(w[t-1,])[[2]]
