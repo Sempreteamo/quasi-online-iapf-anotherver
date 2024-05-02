@@ -18,8 +18,7 @@ learn_psi <- function(n, x, N, L){
     }else{
       for(i in 1:N){
         
-        psi[t,i] <- exp(g(obs[t,],x[t,i,]))*dmvn(as.vector(A%*%X_apf[t,i,]), 
-                params[t+1, 1:d], diag(params[t+1, (d+1):(d+d)]+1, nrow=d,ncol=d))
+        psi[t,i] <- exp(g(obs[t,],x[t,i,]))*evaluate_psi_tilda(x[t,i,], params, t, n)
           
           #(2*pi)^(-d/2)*prod(params[t+1, (d+1):(d+d)]+1)^(-1/2)*
           #exp(-(1/2)*t(A%*%x[t,i,] - params[t+1, 1:d])%*%diag((params[t+1, (d+1):(d+d)]+diag(B))^(-1), nrow=d,ncol=d)%*%
