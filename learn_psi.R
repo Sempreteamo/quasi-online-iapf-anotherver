@@ -8,8 +8,10 @@ learn_psi <- function(n, x, N, L){
   for(t in n:(n-L+1)){
     if(t == n){
       for(i in 1:N){
+        dif <- x[t,i,] - obs[t,]
+        
         psi[t,i] <- (1 / ((2 * pi)^(d / 2))) * 
-          exp(-0.5 * t(x[t,i,] - obs[t,]) %*% (x[t,i,] - obs[t,]))
+          exp(-0.5 * t(dif) %*% dif)
       }
       
       
