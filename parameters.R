@@ -11,11 +11,12 @@ ini_mu <- rep(0, d)
 B = C = D = ini_cov = diag(1, nrow = d, ncol = d)
 model <- list(ini_mu, ini_cov, A, B, C, D)
 
-
-L = 10
+Lag = 10
 Time = 200
-lag <- generate_blocks(L, Time)[[1]]
 
-data <- generate_obs()
+block <- generate_blocks(Lag, Time)[[1]]
+obs <- generate_obs()
+
+data <- list(block, obs)
 
 Napf = N = 1000
