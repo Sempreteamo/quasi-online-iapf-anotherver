@@ -12,8 +12,8 @@ B = C = D = ini_cov = diag(1, nrow = d, ncol = d)
 model <- list(ini_mu, ini_cov, A, B, C, D)
 
 
-lag = 10
-len = 200
-blocks <- generate_blocks(lag, len)[[1]]
-obs <- generate_obs()
-data <- list(blocks, obs)
+L = 10
+Time = 200
+lag <- generate_blocks(L, Time)[[1]]
+
+data <- generate_obs()
