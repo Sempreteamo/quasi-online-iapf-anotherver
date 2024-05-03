@@ -17,3 +17,5 @@ Time = 200
 lag <- generate_blocks(L, Time)[[1]]
 
 data <- generate_obs()
+
+Napf = N = 1000
