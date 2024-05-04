@@ -1,5 +1,7 @@
-
-d = 3
+Napf = N = 1000
+lag = 10
+Time = 200
+d = 2
 alpha = 0.42
 A <- matrix(nrow = d, ncol = d)
 for (i in 1:d){
@@ -9,14 +11,12 @@ for (i in 1:d){
 }
 ini_mu <- rep(0, d)
 B = C = D = ini_cov = diag(1, nrow = d, ncol = d)
-model <- list(ini_mu, ini_cov, A, B, C, D)
+k <- 5
+tau <- 0.5
+kappa = 0.5
+model <- list(ini_mu, ini_cov, A, B, C, D, k, tau, kappa)
 
-Lag = 10
-Time = 200
 
-block <- generate_blocks(Lag, Time)[[1]]
-obs <- generate_obs()
+data <- generate_obs()
 
-data <- list(block, obs)
 
-Napf = N = 1000
