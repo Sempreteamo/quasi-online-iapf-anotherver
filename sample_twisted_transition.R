@@ -13,7 +13,9 @@ sample_twisted_transition <- function(x, params, psi, N){
   
   cov <- output[[2]]
   
-  samples <- rmvn(N, mu, cov)
+  param <- list(mu, cov)
+  
+  samples <- sample_normal_distribution(param, N)
   
   return(samples)
 }
