@@ -1,0 +1,20 @@
+
+#param <- list(C, D)
+#X is a Timexd matrix
+sample_g <- function(param, X, N){
+  C <- param[[1]]
+  D <- param[[2]]
+  
+  mu <- t(C%*%t(X))
+  
+  R <- chol(D)
+  
+  # Generate standard normal samples
+  Z <- matrix(rnorm(N*d), ncol = d)
+  
+  # Apply linear transformation to adjust mean and covariance
+  datum <- t(t(R) %*% t(Z)) + mu
+  
+  return(datum)
+}
+
