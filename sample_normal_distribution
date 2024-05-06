@@ -1,13 +1,9 @@
-
-#param <- list(C, D)
-#X is a Timexd matrix
-sample_g <- function(param, X, N){
-  C <- param[[1]]
-  D <- param[[2]]
+#param <- list(mu, cov)
+sample_normal_distribution <- function(param, N){
+  mu <- param[[1]]
+  cov <- param[[2]]
   
-  mu <- t(C%*%t(X))
-  
-  R <- chol(D)
+  R <- chol(cov)
   
   # Generate standard normal samples
   Z <- matrix(rnorm(N*d), ncol = d)
