@@ -10,18 +10,21 @@ for (i in 1:d){
   }
 }
 ini_mu <- rep(0, d)
-B = C = D = ini_cov = diag(1.5, nrow = d, ncol = d)
+B = C = D = ini_cov = diag(1, nrow = d, ncol = d)
 k <- 5
 tau <- 0.5
 kappa = 0.5
 model <- list(ini_mu = ini_mu, ini_cov = ini_cov, A = A, B = B, C = C, D = D, k, tau, kappa)
 
-data <- generate_obs()
+obs <- sample_obs(list(A, B, C, D), Time)
+
+output <- generate_blocks(lag, len)
+breaks <- output[[1]] 
+psi_index <- output[[2]]
+
+data <- list(obs, breaks, psi_index)
 
 run_quasi_online_pf <- function(model, data, lag, Napf, N){
-  output <- generate_blocks(lag, len)
-  breaks <- output[[1]] 
-  psi_index <- output[[2]]
   
 }
 
