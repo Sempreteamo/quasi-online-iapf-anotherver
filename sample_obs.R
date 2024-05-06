@@ -13,6 +13,6 @@ sample_obs <- function(param, N){
   for(t in 2:Time){ 
     X[t,] <- chol(B)%*%rnorm(d) + A%*%X[t-1,]  #t(rmvn(d) + A%*%x)
   }
-  data <- sample_g(list(t(C%*%t(X)), D), X, N)
+  data <- sample_normal_distribution(list(t(C%*%t(X)), D), N)
   return(data)
 }
