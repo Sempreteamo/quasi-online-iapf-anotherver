@@ -1,5 +1,7 @@
-evaluate_psi_tilda <- function(x, psi_pa, t, n){  #from 0 to T. 0,T = 1 
-  if(t == n){
+evaluate_psi_tilda <- function(x, psi_pa, param, Time){  #from 0 to T. 0,T = 1 
+  A <- param[[1]]
+  
+  if(t == Time){
     psi_tilda <- 0
   }else{   #psi_pa_t = psi_t
     dif <- A%*%x - psi_pa[t+1, 1:d]
