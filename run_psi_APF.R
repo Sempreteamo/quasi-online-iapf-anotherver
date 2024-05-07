@@ -5,12 +5,13 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block){ #purely fil
   C <- model[[5]]
   D <- model[[6]]
   
-  X <- array(NA, dim = c(breaks[[index]][2]-1, N, d))
-  w <- matrix(NA, breaks[[index]][2]-1, N)
-  logZ <- 0
-  
   parallel <- list()
   for(index in 1:2){
+    
+    X <- array(NA, dim = c(breaks[[index]][2]-1, N, d))
+    w <- matrix(NA, breaks[[index]][2]-1, N)
+    logZ <- 0
+    
     if(init){
       if(block){
         X[1,,] <- rnorm(N*d)  
