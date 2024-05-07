@@ -1,5 +1,5 @@
-evaluate_psi <- function(x, psi_pa, t, n){ 
-  if(t == (n + 1)){
+evaluate_psi <- function(x, psi_pa, Time){ 
+  if(t == (Time + 1)){
     psi_t <- 0
   }else{
     dif <- x - psi_pa[t, 1:d]
