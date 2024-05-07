@@ -1,16 +1,18 @@
-run_psi_APF <- function(model, data, N, psi_pa, init = TRUE){ #purely filtering particles
-  X <- array(NA, dim = c(Time, N, d))
-  w <- matrix(NA, Time, N)
-  logZ <- 0
+run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block){ #purely filtering particles
   obs <- data[[1]]
   breaks <- data[[2]]
   psi_index <- data[[3]]
   C <- model[[5]]
   D <- model[[6]]
   
+  X <- array(NA, dim = c(breaks[[index]][2]-1, N, d))
+  w <- matrix(NA, breaks[[index]][2]-1, N)
+  logZ <- 0
+  
+  parallel <- list()
   for(index in 1:2){
     if(init){
-      if(breaks[[index]][2]-1 == lag){
+      if(block){
         X[1,,] <- rnorm(N*d)  
         for(i in 1:N){
           w[1,i] <- evaluate_log_g(list(C, D), X[1,i,], obs[1,])  
@@ -110,7 +112,9 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE){ #purely filtering 
       logZ <- logZ + normalise_weights_in_log_space(w[n,])[[2]] 
     }
     
+    parallel[[index]] <- list(X, w, logZ, ancestors)
+    
   }
   
-  return(list(X, w, logZ, ancestors))
+  return(parallel)
 }
