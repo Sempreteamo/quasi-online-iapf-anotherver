@@ -1,12 +1,10 @@
-run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block){ #purely filtering particles
+run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block, index){ #purely filtering particles
   obs <- data[[1]]
   breaks <- data[[2]]
   psi_index <- data[[3]]
   C <- model[[5]]
   D <- model[[6]]
   
-  parallel <- list()
-  for(index in 1:2){
     
     X <- array(NA, dim = c(breaks[[index]][2]-1, N, d))
     w <- matrix(NA, breaks[[index]][2]-1, N)
@@ -113,9 +111,8 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block){ #purely fil
       logZ <- logZ + normalise_weights_in_log_space(w[n,])[[2]] 
     }
     
-    parallel[[index]] <- list(X, w, logZ, ancestors)
     
-  }
   
-  return(parallel)
+  
+  return(list(X, w, logZ, ancestors))
 }
