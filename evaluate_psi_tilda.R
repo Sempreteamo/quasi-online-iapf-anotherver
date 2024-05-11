@@ -1,4 +1,4 @@
-#if the time n == the time t of psi_pa[t,] we evaluate psi_pa to be zero? to make psi_tilda = 0
+#if the time t of psi_pa[t,] == Time, we evaluate psi_pa to be NA to make psi_tilda = 0
 #psi_pa <- psi_pa[t,]
 evaluate_psi_tilda <- function(x, psi_pa, model){  #from 0 to T. 0,T = 1 
   A <- model$A
@@ -9,7 +9,11 @@ evaluate_psi_tilda <- function(x, psi_pa, model){  #from 0 to T. 0,T = 1
   psi_tilda <- (-d/2)*log(2*pi) - (1/2)*log(det(diag(psi_pa[(d+1):(d+d)] + diag(B), nrow=d, ncol=d))) +
     (-1/2)*t(dif)%*%diag((psi_pa[(d+1):(d+d)] + diag(B))^(-1), nrow=d,ncol=d)%*%dif
   
-  return(psi_tilda)
+  if(is.na(psi_tilda)){
+    return(0)
+  }else{
+    return(psi_tilda) 
+  }
 }
 
 #test:psi_pa <- rnorm(d*2)
