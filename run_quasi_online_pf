@@ -3,18 +3,18 @@ lag = 10
 Time = 200
 d = 3
 alpha = 0.42
-A <- matrix(nrow = d, ncol = d)
+a <- matrix(nrow = d, ncol = d)
 for (i in 1:d){
   for (j in 1:d){
-    A[i,j] = alpha^(abs(i-j) + 1)
+    a[i,j] = alpha^(abs(i-j) + 1)
   }
 }
-ini_mu <- rep(0, d)
-B = C = D = ini_cov = diag(1, nrow = d, ncol = d)
+ini <- rep(0, d)
+b = c = d = ini_c = diag(1, nrow = d, ncol = d)
 k <- 5
 tau <- 0.5
 kappa = 0.5
-model <- list(ini_mu = ini_mu, ini_cov = ini_cov, A = A, B = B, C = C, D = D, k, tau, kappa)
+model <- list(ini_mu = ini, ini_cov = ini_c, A = a, B = b, C = c, D = d, k, tau, kappa)
 
 obs <- sample_obs(list(A, B, C, D), Time)
 
