@@ -10,7 +10,7 @@ for (i in 1:d){
   }
 }
 ini <- rep(0, d)
-b = c = d = ini_c = diag(1, nrow = d, ncol = d)
+b = c = D_ = ini_c = diag(1, nrow = d, ncol = d)
 k <- 5
 tau <- 0.5
 kappa = 0.5
