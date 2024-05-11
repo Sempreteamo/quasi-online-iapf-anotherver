@@ -7,5 +7,10 @@ evaluate_psi <- function(x, psi_pa){
     psi_t <- -(d/2)*log(2*pi) - (1/2)*log(det(diag(psi_pa[(d+1):(d+d)], nrow=d,ncol=d))) +						
       (-1/2)*t(dif)%*%diag((psi_pa[(d+1):(d+d)])^(-1), nrow=d,ncol=d)%*%dif
   
-  return(psi_t)
+  if(is.na(psi_t)){
+    return(0)
+  }else{
+    return(psi_t) 
+  }
 }
+
