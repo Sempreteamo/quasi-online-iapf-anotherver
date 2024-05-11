@@ -7,15 +7,13 @@ sample_twisted_transition <- function(x, params, psi, N){
   
   params <- list(A, params[[2]])
   
-  output <- compute_twisted_initial_params(params, psi)
+  output <- compute_twisted_params(params, psi)
   
   mu <- output[[1]]
   
   cov <- output[[2]]
   
-  param <- list(mu, cov)
-  
-  samples <- sample_normal_distribution(param, N)
+  samples <- rmvn(N, mu, cov)
   
   return(samples)
 }
