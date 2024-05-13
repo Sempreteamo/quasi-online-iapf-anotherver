@@ -1,4 +1,4 @@
-#if when the t of psi_pa[t,] = Time+1, where Time is the n we're evaluating at, then psi_pa == 0 to make 
+#if when the t of psi_pa[t,] = Time+1, where Time is the n we're evaluating at, then psi_pa == NA to make 
 #psi_t <- 0
 #psi_pa <- psi_pa[t,]
 evaluate_psi <- function(x, psi_pa){ 
@@ -8,9 +8,10 @@ evaluate_psi <- function(x, psi_pa){
       (-1/2)*t(dif)%*%diag((psi_pa[(d+1):(d+d)])^(-1), nrow=d,ncol=d)%*%dif
   
   if(is.na(psi_t)){
-    return(0)
-  }else{
-    return(psi_t) 
+    psi_t <- 0
   }
+  
+    return(psi_t) 
+  
 }
 
