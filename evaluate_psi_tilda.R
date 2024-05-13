@@ -10,10 +10,10 @@ evaluate_psi_tilda <- function(x, psi_pa, model){  #from 0 to T. 0,T = 1
     (-1/2)*t(dif)%*%diag((psi_pa[(d+1):(d+d)] + diag(B))^(-1), nrow=d,ncol=d)%*%dif
   
   if(is.na(psi_tilda)){
-    return(0)
-  }else{
-    return(psi_tilda) 
+    psi_tilda <- 0
   }
+  
+  return(psi_tilda)
 }
 
 #test:psi_pa <- rnorm(d*2)
