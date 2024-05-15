@@ -1,13 +1,13 @@
 run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block, index){ #purely filtering particles
-  obs <- data[[1]]
-  breaks <- data[[2]]
-  psi_index <- data[[3]]
-  C <- model[[5]]
-  D <- model[[6]]
-  
+  obs <- data$obs
+  breaks <- data$breaks
+  psi_index <- data$psi_index
+  C <- model$C
+  D <- model$D
+  Time <- nrow(obs)
     
-    X <- array(NA, dim = c(breaks[[index]][2]-1, N, d))
-    w <- matrix(NA, breaks[[index]][2]-1, N)
+    X <- array(NA, dim = c(Time, N, d))
+    w <- matrix(NA, Time, N)
     logZ <- 0
     
     if(init){
@@ -20,22 +20,21 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block, index){ #pur
         #cat('n=',n,'L=',L)
         #cat('w[n-L]=', w[n-L,])
         output <- change_mu(w[n-L,], X[n-L,,])
-        X[n-L+1,,] <- output[[1]]
+        X[1,,] <- output[[1]]
         for (i in 1:(n-L)) {
-          X[i,,] <- X[n-L+1,,]
+          X[i,,] <- X[1,,]
         }
         w_ <- output[[2]]
-        print('pass')
         
         
         for (i in 1:Num){
-          # X[1:(n-L+1),i,] <- f(X[n-L,i,])
-          w[1:(n-L+1), i] <- g(obs[n-L+1,], X[n-L+1,i,]) 
+          # X[1:(1),i,] <- f(X[n-L,i,])
+          w[1, i] <- g(obs[1,], X[1,i,]) 
         }
         
       }
       
-      for(t in 2:(breaks[[index]][2]-1)){
+      for(t in 2:(Time)){
         
         if(compute_ESS_log(w[t-1,]) <= kappa*N){
           
@@ -57,30 +56,30 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block, index){ #pur
         }
       }
       
-      logZ <- logZ + normalise_weights_in_log_space(w[breaks[[index]][2]-1,])[[2]]
+      logZ <- logZ + normalise_weights_in_log_space(w[Time,])[[2]]
       
     }else{
       if(n == L){
-        X[n-L+1,,] <- mu_aux(psi_pa, l, N, n-L+1)
+        X[1,,] <- mu_aux(psi_pa, l, N, 1)
         for (i in 1:(n-L)) {
-          X[i,,] <- X[n-L+1,,]
+          X[i,,] <- X[1,,]
         }
         for(i in 1:N){
-          w[1:(n-L+1),i] <- g_aux(obs[n-L+1,], X[n-L+1,i,], n-L+1, psi_pa, n, L) 
+          w[1:(1),i] <- g_aux(obs[1,], X[1,i,], 1, psi_pa, n, L) 
         }
       }else{
-        output <- change_mupsi(X[n-L,,], w[n-L,], psi_pa, n-L+1, N, l)
-        X[n-L+1,,] <- output[[1]]
+        output <- change_mupsi(X[n-L,,], w[n-L,], psi_pa, 1, N, l)
+        X[1,,] <- output[[1]]
         for (i in 1:(n-L)) {
-          X[i,,] <- X[n-L+1,,]
+          X[i,,] <- X[1,,]
         }
         sum_ <- output[[2]]
         
         for (i in 1:N){
-          #X[1:(n-L+1),i,] <- f_aux(X[n-L, i,], psi_pa, n-L+1)
-          #w[1:(n-L+1), i] <- g_aux(obs[n-L+1,], X[n-L+1,i,], n-L+1, psi_pa, n, L)
+          #X[1:(1),i,] <- f_aux(X[n-L, i,], psi_pa, 1)
+          #w[1:(1), i] <- g_aux(obs[1,], X[1,i,], 1, psi_pa, n, L)
           
-          w[1:(n-L+1), i] <- g_transition(obs[n-L+1,], X[n-L+1,i,],  n-L+1, psi_pa, n) + log(sum_)
+          w[1:(1), i] <- g_transition(obs[1,], X[1,i,],  1, psi_pa, n) + log(sum_)
         }
         
       }
@@ -116,3 +115,4 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block, index){ #pur
   
   return(list(X, w, logZ, ancestors))
 }
+
