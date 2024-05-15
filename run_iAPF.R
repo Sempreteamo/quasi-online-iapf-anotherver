@@ -1,9 +1,10 @@
 run_iAPF <- function(model, data, n, w, X, L, N){
-  breaks <- data[[2]]
-  psi_index <- data[[3]]
+  breaks <- data$breaks
+  psi_index <- data$psi_index
+  obs <- data$obs
+  Time <- nrow(obs)
 
   for(index in 1:2){
-    Time = breaks[[index]][2]-1
     l = 1
     N[l] = N    
     output <- run_psi_APF(model, data, N, psi_pa = 0, init = TRUE, block = 1, index)
