@@ -19,7 +19,7 @@ model <- list(ini_mu = ini, ini_cov = ini_c, A = a, B = b, C = c, D = D_, k, tau
 
 obs_ <- sample_obs(model, Time)
 
-output <- generate_blocks(lag, len)
+output <- generate_blocks(lag, Time)
 breaks_ <- output[[1]] 
 psi_index_ <- output[[2]]
 
