@@ -1,3 +1,4 @@
+library(mvnfast)
 Napf = N = 1000
 lag = 10
 Time = 200
@@ -14,15 +15,15 @@ b = c = D_ = ini_c = diag(1, nrow = d, ncol = d)
 k <- 5
 tau <- 0.5
 kappa = 0.5
-model <- list(ini_mu = ini, ini_cov = ini_c, A = a, B = b, C = c, D = d, k, tau, kappa)
+model <- list(ini_mu = ini, ini_cov = ini_c, A = a, B = b, C = c, D = D_, k, tau, kappa)
 
-obs <- sample_obs(list(A, B, C, D), Time)
+obs_ <- sample_obs(model, Time)
 
 output <- generate_blocks(lag, len)
-breaks <- output[[1]] 
-psi_index <- output[[2]]
+breaks_ <- output[[1]] 
+psi_index_ <- output[[2]]
 
-data <- list(obs, breaks, psi_index)
+data <- list(obs = obs_, breaks = breaks_, psi_index = psi_index_)
 
 run_quasi_online_pf <- function(model, data, lag, Napf, N){
   
