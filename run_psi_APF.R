@@ -30,7 +30,7 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block, index){ #pur
         
       }
       
-      for(t in 2:(Time)){
+      for(t in 2:Time){
         
         if(compute_ESS_log(w[t-1,]) <= kappa*N){
           
@@ -55,46 +55,43 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block, index){ #pur
       logZ <- logZ + normalise_weights_in_log_space(w[Time,])[[2]]
       
     }else{
-      if(n == L){
-        X[1,,] <- mu_aux(psi_pa, l, N, 1)sample_twisted_initial(list(model$ini_mu, model$ini_cov))
+      if(block){
+        X[1,,] <- sample_twisted_initial(list(model$ini_mu, model$ini_cov), psi_pa, N)
         for(i in 1:N){
-          w[1,i] <- g_aux(obs[1,], X[1,i,], 1, psi_pa, n, L) 
+          w[1,i] <- eval_twisted_potential(model, psi_pa, X[1,i,], obs[1,])
         }
       }else{
         output <- change_mupsi(X[n-L,,], w[n-L,], psi_pa, 1, N, l)
         X[1,,] <- output[[1]]
-        for (i in 1:(n-L)) {
-          X[i,,] <- X[1,,]
-        }
-        sum_ <- output[[2]]
         
         for (i in 1:N){
           #X[1:(1),i,] <- f_aux(X[n-L, i,], psi_pa, 1)
           #w[1:(1), i] <- g_aux(obs[1,], X[1,i,], 1, psi_pa, n, L)
           
-          w[1:(1), i] <- g_transition(obs[1,], X[1,i,],  1, psi_pa, n) + log(sum_)
+          w[1, i] <- eval_twisted_potential(model, psi_pa, X[1,i,], obs[1,])
         }
         
       }
       
-      for(t in (n-L+2):n){
+      for(t in 2:Time){
         #print(t)
-        if(compute_ESS_log(w[t-1,], is.log = TRUE) <= kappa*N){
+        if(compute_ESS_log(w[t-1,]) <= kappa*N){
           
           ancestors <- resample(w[t-1,])
           logZ = logZ + normalise_weights_in_log_space(w[t-1,])[[2]]
           
           for(i in 1:N){
             #filtering particles
-            X[t,i,] <- f_aux(X[t-1, ancestors[i],], psi_pa, t)
-            w[t,i] <- g_aux(obs[t,], X[t,i,], t, psi_pa, n, L) 
+            X[t,i,] <- sample_twisted_transition(X[t-1, ancestors[i],], list(model$A, model$B), psi_pa, N)
+            w[t,i] <- eval_twisted_potential(model, psi_pa, X[t,i,], obs[t,])
+            
           }
         }else{
           
           for(i in 1:N){
             #filtering particles
-            X[t,i,] <- f_aux(X[t-1,i,], psi_pa, t) 
-            w[t,i] <- w[t-1,i] + g_aux(obs[t,], X[t,i,], t, psi_pa, n, L)
+            X[t,i,] <- sample_twisted_transition(X[t-1, i,], list(model$A, model$B), psi_pa, N)
+            w[t,i] <- w[t-1,i] + eval_twisted_potential(model, psi_pa, X[t,i,], obs[t,])
           }
         }
         
@@ -107,4 +104,6 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block, index){ #pur
   
   
   return(list(X, w, logZ, ancestors))
+}
+
 }
