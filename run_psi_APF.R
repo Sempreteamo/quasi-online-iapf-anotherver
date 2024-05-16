@@ -1,4 +1,4 @@
-run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block, index){ #purely filtering particles
+run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block){ #purely filtering particles
   obs <- data$obs
   breaks <- data$breaks
   psi_index <- data$psi_index
