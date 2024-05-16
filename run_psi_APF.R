@@ -21,15 +21,11 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block, index){ #pur
         #cat('w[n-L]=', w[n-L,])
         output <- change_mu(w[n-L,], X[n-L,,])
         X[1,,] <- output[[1]]
-        for (i in 1:(n-L)) {
-          X[i,,] <- X[1,,]
-        }
         w_ <- output[[2]]
         
         
         for (i in 1:Num){
-          # X[1:(1),i,] <- f(X[n-L,i,])
-          w[1, i] <- g(obs[1,], X[1,i,]) 
+          w[1, i] <- evaluate_log_g(list(C, D), X[1,i,], obs[1,])
         }
         
       }
@@ -60,12 +56,9 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block, index){ #pur
       
     }else{
       if(n == L){
-        X[1,,] <- mu_aux(psi_pa, l, N, 1)
-        for (i in 1:(n-L)) {
-          X[i,,] <- X[1,,]
-        }
+        X[1,,] <- mu_aux(psi_pa, l, N, 1)sample_twisted_initial(list(model$ini_mu, model$ini_cov))
         for(i in 1:N){
-          w[1:(1),i] <- g_aux(obs[1,], X[1,i,], 1, psi_pa, n, L) 
+          w[1,i] <- g_aux(obs[1,], X[1,i,], 1, psi_pa, n, L) 
         }
       }else{
         output <- change_mupsi(X[n-L,,], w[n-L,], psi_pa, 1, N, l)
@@ -115,4 +108,3 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block, index){ #pur
   
   return(list(X, w, logZ, ancestors))
 }
-
