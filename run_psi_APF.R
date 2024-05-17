@@ -1,7 +1,4 @@
-run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block){ #purely filtering particles
-  obs <- data$obs
-  breaks <- data$breaks
-  psi_index <- data$psi_index
+run_psi_APF <- function(model, obs, breaks, N, psi_pa, init = TRUE){ #purely filtering particles
   C <- model$C
   D <- model$D
   Time <- nrow(obs)
@@ -11,7 +8,7 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block){ #purely fil
     logZ <- 0
     
     if(init){
-      if(block){
+      if(breaks[1] == 1){
         X[1,,] <- rnorm(N*d)  
         for(i in 1:N){
           w[1,i] <- evaluate_log_g(list(C, D), X[1,i,], obs[1,])  
@@ -55,7 +52,7 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block){ #purely fil
       logZ <- logZ + normalise_weights_in_log_space(w[Time,])[[2]]
       
     }else{
-      if(block){
+      if(breaks[1] == 1){
         X[1,,] <- sample_twisted_initial(list(model$ini_mu, model$ini_cov), psi_pa, N)
         for(i in 1:N){
           w[1,i] <- eval_twisted_potential(model, psi_pa, X[1,i,], obs[1,])
@@ -104,6 +101,4 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE, block){ #purely fil
   
   
   return(list(X, w, logZ, ancestors))
-}
-
 }
