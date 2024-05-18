@@ -1,8 +1,8 @@
 library(mvnfast)
-Napf = N = 1000
+Napf = N = 100
 lag = 10
-Time = 200
-d = 3
+Time = 100
+d = 2
 alpha = 0.42
 a <- matrix(nrow = d, ncol = d)
 for (i in 1:d){
@@ -26,7 +26,19 @@ psi_index_ <- output[[2]]
 data <- list(obs = obs_, breaks = breaks_, psi_index = psi_index_)
 
 run_quasi_online_pf <- function(model, data, lag, Napf, N){
+  output <- run_iAPF(model, data, N)
+  X <- output[[1]]
+  w <- output[[2]]
+  psi_pa <- output[[3]]
+  ancestors <- output[[5]]
+  data <- list(obs, ancestors)
   
+  output1 <- run_psi_APF(model, data, breaks, N, psi_pa)
+  X <- output1[[1]]
+  w <- output1[[2]]
+  logZ <- output1[[4]]
+  
+  return(list(X = X, w = w, logZ = logZ))
 }
 
 
