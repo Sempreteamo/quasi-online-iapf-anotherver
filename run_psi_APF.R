@@ -1,4 +1,6 @@
 run_psi_APF <- function(model, data, N, psi_pa, init = TRUE){ #purely filtering particles
+  A <- model$A
+  B <- model$B
   C <- model$C
   D <- model$D
   obs <- data[[1]]
