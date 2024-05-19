@@ -3,6 +3,7 @@
 #N = N[l]
 resample <- function(logW, mode = 'res'){
   
+  N <- length(logW)
   w_ <- normalise_weights_in_log_space(logW)[[1]]
   
   if(mode == 'multi'){
