@@ -15,7 +15,7 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE){ #purely filtering 
       if(breaks[1] == 1){
         X[1,,] <- rnorm(N*d)  
         for(i in 1:N){
-          w[1,i] <- evaluate_log_g(list(C, D), X[1,i,], obs[1,])  
+          w[1,i] <- evaluate_log_g(model, X[1,i,], obs[1,])  
         }
       }else{
         #cat('n=',n,'L=',L)
@@ -25,8 +25,8 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE){ #purely filtering 
         w_ <- output[[2]]
         
         
-        for (i in 1:Num){
-          w[1, i] <- evaluate_log_g(list(C, D), X[1,i,], obs[1,])
+        for (i in 1:N){
+          w[1, i] <- evaluate_log_g(model, X[1,i,], obs[1,])
         }
         
       }
@@ -41,14 +41,14 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE){ #purely filtering 
           
           X[t,,] <- sample_normal_distribution(list(t(A%*%t(X[t-1, ancestors,])), B), N)
           for(i in 1:N){
-            w[t,i] <- evaluate_log_g(list(C, D), obs[t,], X[t,i,])  
+            w[t,i] <- evaluate_log_g(model, X[t,i,], obs[t,])  
           }
           
         }else{
           
           X[t,,] <- sample_normal_distribution(list(t(A%*%t(X[t-1, ,])), B), N)
           for(i in 1:N){
-            w[t,i] <- w[t-1,i] + evaluate_log_g(list(C, D), obs[t,], X[t,i,])  
+            w[t,i] <- w[t-1,i] + evaluate_log_g(model, X[t,i,], obs[t,])  
           }
         }
       }
