@@ -8,9 +8,9 @@ run_iAPF <- function(model, data, N){
     for(b in 2:length(breaks[[index]])){
       l = 1
       N[l] = N    
-      output <- run_psi_APF(model, obs[breaks[[index]][(b-1)]:(breaks[[index]][b]-1),], breaks[[index]][(b-1):b], N, psi_pa = 0, init = TRUE)
-      X_apf <- output[[index]][[1]]
-      Z_apf[l] <- output[[index]][[3]]
+      output <- run_psi_APF(model, list(obs[breaks[[index]][(b-1)]:(breaks[[index]][b]-1),], breaks[[index]][(b-1):b]), N, psi_pa = 0, init = TRUE)
+      X_apf <- output[[1]]
+      Z_apf[l] <- output[[3]]
       
       while(TRUE){
         
