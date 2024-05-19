@@ -1,10 +1,9 @@
 #N=N[l], x = X_apf[t,,]
 
-learn_psi <- function(x, N, data){
-  obs <- data$obs
+learn_psi <- function(x, N, obs, model){
+  Time <- nrow(obs)
   psi <- matrix(NA, nrow = Time, ncol = N)
   psi_pa <- matrix(NA, nrow = Time, ncol = 2*d)
-  Time <- nrow(obs)
   
   #calculate psi
   for(t in Time:1){
@@ -21,8 +20,8 @@ learn_psi <- function(x, N, data){
     }else{
       for(i in 1:N){
         
-        psi[t,i] <- exp(evaluate_log_g(list(C, D), x[t,i,], obs[t,]))*
-          exp(evaluate_psi_tilda(x[t,i,], psi_pa, list(A, B), Time))
+        psi[t,i] <- exp(evaluate_log_g(model, x[t,i,], obs[t,]))*
+          exp(evaluate_psi_tilda(x[t,i,], psi_pa, model))
           
           #(2*pi)^(-d/2)*prod(psi_pa[t+1, (d+1):(d+d)]+1)^(-1/2)*
           #exp(-(1/2)*t(A%*%x[t,i,] - psi_pa[t+1, 1:d])%*%diag((psi_pa[t+1, (d+1):(d+d)]+diag(B))^(-1), nrow=d,ncol=d)%*%
@@ -31,7 +30,6 @@ learn_psi <- function(x, N, data){
       }
     }
     
-    print(1)
     psi_pa[t,] <- optimization(x[t,,], log(psi[t,]))
     
     
