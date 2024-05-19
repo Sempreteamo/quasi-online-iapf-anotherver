@@ -5,6 +5,8 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE){ #purely filtering 
   D <- model$D
   obs <- data[[1]]
   breaks <- data[[2]]
+  w_previous <- data[[3]]
+  X_previous <- data[[4]]
   Time <- nrow(obs)
     
     X <- array(NA, dim = c(Time, N, d))
@@ -18,12 +20,11 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE){ #purely filtering 
           w[1,i] <- evaluate_log_g(model, X[1,i,], obs[1,])  
         }
       }else{
-        #cat('n=',n,'L=',L)
-        #cat('w[n-L]=', w[n-L,])
-        output <- change_mu(w[n-L,], X[n-L,,])
-        X[1,,] <- output[[1]]
-        w_ <- output[[2]]
         
+        s <- resample(w_previous, mode = 'multi')
+        for(i in 1:N){
+          X[1,i,] <- rmvn(1, A%*%X_previous[s[i],], B)
+        }
         
         for (i in 1:N){
           w[1, i] <- evaluate_log_g(model, X[1,i,], obs[1,])
@@ -62,7 +63,7 @@ run_psi_APF <- function(model, data, N, psi_pa, init = TRUE){ #purely filtering 
           w[1,i] <- eval_twisted_potential(model, psi_pa, X[1,i,], obs[1,])
         }
       }else{
-        output <- change_mupsi(X[n-L,,], w[n-L,], psi_pa, 1, N, l)
+        output <- change_mupsi(X[n-L,,], w_previous, psi_pa, 1, N, l)
         X[1,,] <- output[[1]]
         
         for (i in 1:N){
