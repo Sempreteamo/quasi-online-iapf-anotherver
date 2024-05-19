@@ -1,6 +1,8 @@
-run_psi_APF <- function(model, obs, breaks, N, psi_pa, init = TRUE){ #purely filtering particles
+run_psi_APF <- function(model, data, N, psi_pa, init = TRUE){ #purely filtering particles
   C <- model$C
   D <- model$D
+  obs <- data[[1]]
+  breaks <- data[[2]]
   Time <- nrow(obs)
     
     X <- array(NA, dim = c(Time, N, d))
