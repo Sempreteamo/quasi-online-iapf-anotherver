@@ -3,11 +3,10 @@ run_iAPF <- function(model, data, Napf){
   psi_index <- data$psi_index
   obs <- data$obs
   Time <- nrow(obs)
-  psi_pa1 = NULL
   psi_final <- list()
 
   for(index in 1:2){
-    
+    psi_pa1 = NULL
     for(b in 2:length(breaks[[index]])){
       l = 1
       Z_apf <- vector()
