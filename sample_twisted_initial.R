@@ -1,8 +1,11 @@
 #params <- list(ini_mu, ini_cov)
 #psi <- psi_pa[t,]
-sample_twisted_initial <- function(params, psi, N){
+sample_twisted_initial <- function(model, psi, N){
   
-  output <- compute_twisted_params(params, psi)
+  ini_mu <- model$ini_mu
+  ini_cov <- model$ini_cov
+  
+  output <- compute_twisted_params(list(ini_mu, ini_cov), psi)
   
   mu <- output[[1]]
   
