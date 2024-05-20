@@ -2,10 +2,11 @@
 #params <- list(A, B)
 #psi <- psi_pa[t,]
 
-sample_twisted_transition <- function(x, params, psi, N){
-  A <- params[[1]]%*%x
+sample_twisted_transition <- function(x, model, psi, N){
+  A <- model$A
+  B <- model$B
   
-  params <- list(A, params[[2]])
+  params <- list(A%*%x, B)
   
   output <- compute_twisted_params(params, psi)
   
@@ -17,6 +18,3 @@ sample_twisted_transition <- function(x, params, psi, N){
   
   return(samples)
 }
-
-#test: x <- rnorm(d)
-#psi <- rnorm(2*d)
