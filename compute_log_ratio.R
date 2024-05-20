@@ -1,4 +1,4 @@
-log_ratio <- function(Z, model, data){
+compute_log_ratio <- function(Z, model, data){
   a0 <- model$a0
   P0 <- model$P0
   dt <- model$dt
@@ -11,6 +11,5 @@ log_ratio <- function(Z, model, data){
   fkf.obj <- fkf(a0, P0, dt, ct, Tt, Zt, Ht, Gt, yt = t(obs))
   fks.obj <- fks(fkf.obj)
   fkf.obj_Z <- fkf(a0, P0, dt, ct, Tt, Zt, Ht, Gt, yt = t(obs))$logLik
-  cat('NC = ', fkf.obj_Z)
-  cat('log_ratio = ', exp(Z-fkf.obj_Z))
+  cat('NC = ', fkf.obj_Z, 'log_ratio = ', exp(Z-fkf.obj_Z))
 }
