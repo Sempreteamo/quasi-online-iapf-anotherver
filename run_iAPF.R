@@ -1,16 +1,17 @@
-run_iAPF <- function(model, data, N){
+run_iAPF <- function(model, data, Napf){
   breaks <- data$breaks
   psi_index <- data$psi_index
   obs <- data$obs
   Time <- nrow(obs)
+  psi_pa1 = psi_pa2 = NULL
 
   for(index in 1:2){
     
     for(b in 2:length(breaks[[index]])){
       l = 1
       Z_apf <- vector()
-      N[l] = N    
-      output <- run_psi_APF(model, list(obs[breaks[[index]][(b-1)]:(breaks[[index]][b]-1),], breaks[[index]][(b-1):b], 0, 0), N, psi_pa = 0, init = TRUE)
+      N[l] = Napf    
+      output <- run_psi_APF(model, list(obs[breaks[[index]][(b-1)]:(breaks[[index]][b]-1),], breaks[[index]][(b-1):b], 0, 0), N[l], psi_pa = 0, init = TRUE)
       X_apf <- output[[1]]
       w_apf <- output[[2]]
       Z_apf[l] <- output[[3]]
@@ -51,6 +52,8 @@ run_iAPF <- function(model, data, N){
           l <- l+1
         }else break
       }
+      
+      psi_pa1 <- cbind(psi_pa1, psi_pa)
     }
     
   }
