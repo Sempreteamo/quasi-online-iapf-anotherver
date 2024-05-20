@@ -1,4 +1,5 @@
 library(mvnfast)
+library(FKF)
 Napf = N = 100
 lag = 10
 Time = 100
@@ -45,6 +46,8 @@ run_quasi_online_pf <- function(model, data, lag, Napf, N){
   X <- output1[[1]]
   w <- output1[[2]]
   logZ <- output1[[3]]
+  
+  compute_log_ratio(logZ, model, data)
   
   return(list(X = X, w = w, logZ = logZ))
 }
