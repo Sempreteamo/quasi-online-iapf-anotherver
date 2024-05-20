@@ -60,7 +60,7 @@ run_iAPF <- function(model, data, Napf){
         }else break
       }
       
-      psi_pa1 <- cbind(psi_pa1, psi_pa)
+      psi_pa1 <- rbind(psi_pa1, psi_pa)
     }
     
   }
