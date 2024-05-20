@@ -3,7 +3,8 @@ run_iAPF <- function(model, data, Napf){
   psi_index <- data$psi_index
   obs <- data$obs
   Time <- nrow(obs)
-  psi_pa1 = psi_pa2 = NULL
+  psi_pa1 = NULL
+  psi_final <- list()
 
   for(index in 1:2){
     
@@ -62,8 +63,8 @@ run_iAPF <- function(model, data, Napf){
       
       psi_pa1 <- rbind(psi_pa1, psi_pa)
     }
-    
+    psi_final[[index]] <- psi_pa1
   }
   #output psi
-  return(list(X_apf, w_apf, psi_pa, Z_apf[l], ancestors))
+  return(list(X_apf, w_apf, psi_final, Z_apf[l], ancestors))
 }
