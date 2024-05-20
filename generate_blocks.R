@@ -8,6 +8,14 @@ generate_blocks <- function(lag, len){
   breaks[[1]] <- seq(1, len, by = lag)
   breaks[[2]] <- c(1, seq(lag/2 + 1, len, by = lag))
   
+  if (tail( breaks[[1]], 1) != len) {
+    breaks[[1]] <- c(breaks[[1]], len)
+  }
+  
+  if (tail(breaks[[2]], 1) != len) {
+    breaks[[2]] <- c(breaks[[2]], len)
+  }
+    
   for (i in 1:num_blocks) {
     
     start_time <- (i - 1) * lag + 1
