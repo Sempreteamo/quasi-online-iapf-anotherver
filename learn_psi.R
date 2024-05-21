@@ -1,7 +1,8 @@
 #N=N[l], x = X_apf[t,,]
 
-learn_psi <- function(x, N, obs, model){
+learn_psi <- function(x, obs, model){
   Time <- nrow(obs)
+  N <- dim(x)[2]
   psi <- matrix(NA, nrow = Time, ncol = N)
   psi_pa <- matrix(NA, nrow = Time, ncol = 2*d)
   
@@ -33,8 +34,8 @@ learn_psi <- function(x, N, obs, model){
     psi_pa[t,] <- optimization(x[t,,], log(psi[t,]))
     
     
-    #print(psi_pa[t, 1:d])
-    #print(obs[t,])
+    print(psi_pa[t, 1:d])
+    print(obs[t,])
     
   }
   return(params = psi_pa)
