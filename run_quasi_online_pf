@@ -34,15 +34,16 @@ data <- list(obs = obs_, breaks = breaks_, psi_index = psi_index_)
 
 run_quasi_online_pf <- function(model, data, lag, Napf, N){
   breaks <- data$breaks
+  index <- data$psi_index
   output <- run_iAPF(model, data, Napf)
-  X <- output[[1]]
-  w <- output[[2]]
+  #X <- output[[1]]
+  #w <- output[[2]]
   psi_pa <- output[[3]]
   ancestors <- output[[5]]
   
-  psi_final <- combine_psi(psi_pa, data)
+  psi_final <- combine_psi(psi_pa, index)
   
-  output1 <- run_psi_APF(model, list(obs, breaks[[1]][1], 0, 0), N, psi_final, init = FALSE)
+  output1 <- smoothing(model, list(obs, breaks[[1]][1], 0, 0), Napf, psi_final, init = FALSE)
   X <- output1[[1]]
   w <- output1[[2]]
   logZ <- output1[[3]]
