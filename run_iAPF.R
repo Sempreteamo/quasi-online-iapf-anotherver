@@ -2,6 +2,7 @@ run_iAPF <- function(model, data, Napf){
   breaks <- data$breaks
   psi_index <- data$psi_index
   obs <- data$obs
+  k <- model$k
   Time <- nrow(obs)
   psi_final <- list()
 
@@ -47,7 +48,7 @@ run_iAPF <- function(model, data, Napf){
         if(l <= k ){
           print(l)
           #receive filtering particles X_apf for psi
-          psi_pa <- learn_psi(X_apf, N[l], obs[breaks[[index]][(b-1)]:(breaks[[index]][b]-1),], model) 
+          psi_pa <- learn_psi(X_apf, obs[breaks[[index]][(b-1)]:(breaks[[index]][b]-1),], model) 
           
           if(l > k & N[max(l-k,1)] == N[l] & is.unsorted(Z_apf[max(l-k,1):l])){  
             N[l+1] <- 2*N[l]
