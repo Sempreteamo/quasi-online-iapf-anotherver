@@ -22,7 +22,7 @@ learn_psi <- function(x, obs, model){
       for(i in 1:N){
         
         psi[t,i] <- exp(evaluate_log_g(model, x[t,i,], obs[t,]))*
-          exp(evaluate_psi_tilda(x[t,i,], psi_pa, model))
+          exp(evaluate_psi_tilde(x[t,i,], psi_pa[t+1, ], model))
           
           #(2*pi)^(-d/2)*prod(psi_pa[t+1, (d+1):(d+d)]+1)^(-1/2)*
           #exp(-(1/2)*t(A%*%x[t,i,] - psi_pa[t+1, 1:d])%*%diag((psi_pa[t+1, (d+1):(d+d)]+diag(B))^(-1), nrow=d,ncol=d)%*%
