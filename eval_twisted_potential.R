@@ -1,4 +1,4 @@
-#if the time t at psi_pa[t,] is 1, then density should be 0
+#if the time t at psi_pa[t,] is 1, then density should not be 0
 #if time t at psi_pa[t,] is T, set the psi_pa of psi_til as NA
 #if t is T+1, set psi_pa of psi as NA
 
@@ -12,14 +12,14 @@ eval_twisted_potential <- function(model, psi_pa, x, y){
   dif <- ini_mu - psi_d[1:d]
   add <- psi_d[(d+1):(d+d)] + diag(ini_cov)
   
-    density <- (d/2)*log(2*pi)-(1/2)*log(det(diag(add, nrow=d,ncol=d))) - 
+    density <- -(d/2)*log(2*pi)-(1/2)*log(det(diag(add, nrow=d,ncol=d))) - 
       (1/2)*t(dif)%*%diag((add)^(-1), nrow=d,ncol=d)%*%(dif)
     
     if(is.na(density)){
       density <- 0
     }
     
-    potential <- evaluate_log_g(model, x, y) + evaluate_psi_tilde(x, psi_t, model) - density -
+    potential <- evaluate_log_g(model, x, y) + evaluate_psi_tilde(x, psi_t, model) + density -
       evaluate_psi(x, psi) #g_2:T 
   
   
