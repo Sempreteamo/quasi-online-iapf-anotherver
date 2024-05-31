@@ -1,9 +1,10 @@
+set.seed(1234)
 library(mvnfast)
 library(FKF)
-Napf = N = 100
+Napf = N = 1000
 lag = 10
 Time = 100
-d = 2
+d = 100
 alpha = 0.42
 a <- matrix(nrow = d, ncol = d)
 for (i in 1:d){
@@ -36,21 +37,22 @@ run_quasi_online_pf <- function(model, data, lag, Napf, N){
   breaks <- data$breaks
   index <- data$psi_index
   output <- run_iAPF(model, data, Napf)
-  #X <- output[[1]]
-  #w <- output[[2]]
+  X <- output[[1]]
+  w <- output[[2]]
   psi_pa <- output[[3]]
+  logZ <- output[[4]]
   ancestors <- output[[5]]
   
   psi_final <- combine_psi(psi_pa, index)
   
-  output1 <- smoothing(model, list(obs, breaks[[1]][1], 0, 0), Napf, psi_final, init = FALSE)
+  output1 <- run_psi_APF(model, list(obs, breaks[[1]][1], 0, 0), Napf, psi_final, init = FALSE)
   X <- output1[[1]]
   w <- output1[[2]]
   logZ <- output1[[3]]
   
-  compute_log_ratio(logZ, model, data)
+  log_ratio <- compute_log_ratio(logZ, model, data)
   
-  return(list(X = X, w = w, logZ = logZ))
+  return(list(X = X, w = w, logZ = logZ, log_ratio = log_ratio))
 }
 
 
