@@ -1,7 +1,9 @@
 combine_psi <- function(psi, index){
-  Time <- nrow(psi[[1]])
+  dims <- dim(psi[[1]])
+  Time <- dims[1]
+  d <- dims[2]
   
-  combined_psi <- matrix(NA, Time, 2*d)
+  combined_psi <- matrix(NA, Time, d)
     
    for(t in 1: Time){
      combined_psi[t,] <- psi[[index[t]]][t,]
