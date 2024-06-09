@@ -3,6 +3,7 @@
 
 optimization <- function(x, lfn){
   params <- vector()
+  d <- dim(x)[2]
   
   coef <- -lm(lfn~., data.frame(cbind(x^2, x)))$coefficients
   a <- coef[2:(1+d)]
