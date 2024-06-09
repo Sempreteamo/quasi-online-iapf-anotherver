@@ -1,7 +1,7 @@
 # params <- list(dist_mu, dist_cov)
 # psi <- psi_pa[t,]
 compute_twisted_params <- function(params, psi){
-  d <- dim(psi[[1]])[2]
+  d <- length(psi)
   dist_mu <- params$mean
   dist_cov <- params$cov
   psi_mu <- psi[1:d]
