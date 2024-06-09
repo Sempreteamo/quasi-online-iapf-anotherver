@@ -8,6 +8,7 @@ run_psi_APF <- function(model, data, N, psi_pa, init){ #purely filtering particl
   w_previous <- data[[3]]
   X_previous <- data[[4]]
   Time <- nrow(obs)
+  kappa <- model$kappa
     
     X <- array(NA, dim = c(Time, N, d))
     w <- matrix(NA, Time, N)
