@@ -2,13 +2,14 @@
 
 learn_psi <- function(x, obs, model){
   Time <- nrow(obs)
+  d <- model$d
   N <- dim(x)[2]
   psi <- matrix(NA, nrow = Time, ncol = N)
   psi_pa <- matrix(NA, nrow = Time, ncol = 2*d)
   
   #calculate psi
   for(t in Time:1){
-    print(t)
+    #print(t)
     if(t == Time){
       for(i in 1:N){
         dif <- x[t, i,] - obs[t,]
@@ -34,8 +35,8 @@ learn_psi <- function(x, obs, model){
     psi_pa[t,] <- optimization(x[t,,], log(psi[t,]))
     
     
-    print(psi_pa[t, 1:d])
-    print(obs[t,])
+    #print(psi_pa[t, 1:d])
+    #print(obs[t,])
     
   }
   return(params = psi_pa)
