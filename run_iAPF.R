@@ -7,8 +7,9 @@ run_iAPF <- function(model, data, Napf){
   psi_final <- list()
 
   for(index in 1:2){
-    #print(index)
+    cat('index=', index)
     psi_pa1 = NULL
+    ancestors1 = NULL
     for(b in 2:length(breaks[[index]])){
       #print(b)
       l = 1
@@ -44,7 +45,8 @@ run_iAPF <- function(model, data, Napf){
           X_apf <- output[[1]]
           w_apf <- output[[2]]
           Z_apf[l] <- output[[3]]
-          ancestors <- rbind(ancestors, output[[4]])
+          ancestors <- output[[4]]
+          
         }
         
         #to speed up the algorithm, I just fix the number of iterations to be k.
@@ -68,9 +70,12 @@ run_iAPF <- function(model, data, Napf){
       }
       
       psi_pa1 <- rbind(psi_pa1, psi_pa)
+      ancestors1 <- rbind(ancestors1, ancestors)
+      
     }
+    
     psi_final[[index]] <- psi_pa1
   }
   #output psi
-  return(list(X_apf, w_apf, psi_final, Z_apf[l], ancestors))
+  return(list(X_apf, w_apf, psi_final, Z_apf[l], ancestors1))
 }
