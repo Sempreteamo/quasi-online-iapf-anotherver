@@ -4,12 +4,15 @@ run_iAPF <- function(model, data, Napf){
   obs <- data$obs
   k <- model$k
   Time <- nrow(obs)
+  d = ncol(obs)
   psi_final <- list()
+  combined <- array(NA, dim = c(Napf, Time, d))
 
   for(index in 1:2){
     cat('index=', index)
     psi_pa1 = NULL
     ancestors1 = NULL
+    
     for(b in 2:length(breaks[[index]])){
       #print(b)
       l = 1
@@ -71,11 +74,12 @@ run_iAPF <- function(model, data, Napf){
       
       psi_pa1 <- rbind(psi_pa1, psi_pa)
       ancestors1 <- rbind(ancestors1, ancestors)
+      combined[((b-2)*dim(X_apf)[1] + 1):((b-1)*dim(X_apf)[1]),,] <- X_apf  
       
     }
     
     psi_final[[index]] <- psi_pa1
   }
   #output psi
-  return(list(X_apf, w_apf, psi_final, Z_apf[l], ancestors1))
+  return(list(combined, w_apf, psi_final, Z_apf[l], ancestors1))
 }
