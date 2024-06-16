@@ -3,7 +3,7 @@ library(mvnfast)
 library(FKF)
 library(roxygen2)
 Napf = N = 200
-lag = 10
+lag = 100
 Time = 200
 d_ = 2
 alpha = 0.42
@@ -38,6 +38,7 @@ run_quasi_online_pf <- function(model, data, lag, Napf, N){
   breaks <- data$breaks
   index <- data$psi_index
   obs <- data$obs
+  Xs <- array(NA, dim = c(nrow(obs), N, model$d))
   output <- run_iAPF(model, data, Napf)
   X <- output[[1]]
   w <- output[[2]]
@@ -46,6 +47,15 @@ run_quasi_online_pf <- function(model, data, lag, Napf, N){
   ancestors <- output[[5]]
   
   psi_final <- combine_psi(psi_pa, index)
+  
+  for(i in 1:N){
+    Xs[i, Time,] <- X[i, Time,]
+    a <- ancestors[Time, i] 
+    for (t in (Time-1):1) {
+      Xs[i, t, ] <- X[i, a, ]
+      a <- ancestors[t, a]
+    }
+  }
   
   output1 <- run_psi_APF(model, list(obs, breaks[[1]][1], 0, 0), Napf, psi_final, init = FALSE)
   X <- output1[[1]]
@@ -62,4 +72,3 @@ for (qq in 1:1) {
   set.seed(qq*2)
   ratio[qq] <- run_quasi_online_pf(model, data, lag, Napf, N)[[4]]
 }
-
