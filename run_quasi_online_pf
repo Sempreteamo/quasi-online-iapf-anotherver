@@ -40,13 +40,19 @@ run_quasi_online_pf <- function(model, data, lag, Napf, N){
   obs <- data$obs
   Xs <- array(NA, dim = c(nrow(obs), N, model$d))
   output <- run_iAPF(model, data, Napf)
-  X <- output[[1]]
-  w <- output[[2]]
+  #X <- output[[1]]
+  #w <- output[[2]]
   psi_pa <- output[[3]]
-  #logZ <- output[[4]]
-  ancestors <- output[[5]]
+  logZ <- output[[4]]
+  #ancestors <- output[[5]]
   
   psi_final <- combine_psi(psi_pa, index)
+  
+  output1 <- run_psi_APF(model, list(obs, breaks[[1]][1], 0, 0), Napf, psi_final, init = FALSE)
+  X <- output1[[1]]
+  w <- output1[[2]]
+  logZ <- output1[[3]]
+  ancestors <- output1[[4]]
   
   for(i in 1:N){
     Xs[i, Time,] <- X[i, Time,]
@@ -80,10 +86,6 @@ run_quasi_online_pf <- function(model, data, lag, Napf, N){
   logZ = 0
   logZ <- logZ + normalise_weights_in_log_space(w[Time,])[[2]] 
   
-  #output1 <- run_psi_APF(model, list(obs, breaks[[1]][1], 0, 0), Napf, psi_final, init = FALSE)
-  #X <- output1[[1]]
-  #w <- output1[[2]]
-  #logZ <- output1[[3]]
   
   log_ratio <- compute_log_ratio(logZ, model, data)
   
