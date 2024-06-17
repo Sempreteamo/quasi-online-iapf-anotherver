@@ -13,9 +13,11 @@
 evaluate_log_g <- function(model, x, datum){  
   C <- model$C
   D <- model$D
-  d <- model$d
+  d <- length(x)
+  
   dif <- datum - C%*%x
+  
   log_density <- (-d/2)*log(2*pi) - (1/2)*log(prod(diag(D))) + (-1/2)*t(dif)%*%D%*%dif
-  return (log_density) 
+  return(log_density) 
 }
 
