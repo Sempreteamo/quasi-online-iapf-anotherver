@@ -3,9 +3,9 @@ library(mvnfast)
 library(FKF)
 library(roxygen2)
 Napf = N = 200
-lag = 100
+lag = 10
 Time = 200
-d_ = 2
+d_ = 5
 alpha = 0.42
 a <- matrix(nrow = d_, ncol = d_)
 for (i in 1:d_){
@@ -63,28 +63,13 @@ run_quasi_online_pf <- function(model, data, lag, Napf, N){
     }
   }
   
-  find_different_rows <- function(ancestors) {
-    # Initialize an empty vector to store row indices
-    different_rows <- c()
-    
-    # Loop through each row (starting from the second row)
-    for (i in 2:nrow(ancestors)) {
-      # Compare current row with the previous row
-      if (!all(ancestors[i,] == ancestors[i - 1,])) {
-        different_rows <- c(different_rows, i)
-      }
-    }
-    if(length(different_rows) == 0){
-      different_rows = 0
-    }
-    
-    return(different_rows)
-  }
-  
   # Call the function to find rows where elements differ from the previous row
   different_rows <- find_different_rows(ancestors)
   logZ = 0
-  logZ <- logZ + normalise_weights_in_log_space(w[Time,])[[2]] 
+  for(t in c(different_rows, Time)){
+    logZ <- logZ + normalise_weights_in_log_space(w[t-1,])[[2]] 
+  }
+  
   
   
   log_ratio <- compute_log_ratio(logZ, model, data)
