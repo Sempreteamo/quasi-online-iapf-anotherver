@@ -1,4 +1,4 @@
-#' Function to evaluate the density of a twisting function
+#' Function to evaluate a twisting function psi_tilde
 #'
 #'This function evaluates the one-step-ahead expectation of a twisting function with 
 #'the specified parameters at one or more points.
