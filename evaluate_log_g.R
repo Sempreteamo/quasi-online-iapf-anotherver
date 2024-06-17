@@ -1,19 +1,21 @@
-#params <- list(C, D)
+#' Function to evaluate the log-density of the observation density
+#'
+#'This function evaluates the log-density of the observation density. 
+#'It is expected to be updated to evaluate log-density of general potential functions.
+#'
+#' @param model List containing model parameters
+#' @param x State at which to evaluate
+#' @param datum Data point at which to evaluate
+#'
+#' @return Log-density of the observation density
+#' @export
+#'
 evaluate_log_g <- function(model, x, datum){  
   C <- model$C
   D <- model$D
+  d <- model$d
   dif <- datum - C%*%x
   log_density <- (-d/2)*log(2*pi) - (1/2)*log(prod(diag(D))) + (-1/2)*t(dif)%*%D%*%dif
   return (log_density) 
 }
 
-#test
-#x <- c(0.7418182, 0.1584118)
-#datum <- c(0.67968786, -0.01167335)
-#expected_output <- dmvn(datum, C%*%x, D, log = TRUE)
-#result <- evaluate_log_g(model, x, datum)
-#tolerance <- 1e-6
-#is_close_enough <- abs(result - expected_output) < tolerance
-#if (!is_close_enough) {
-# stop("Test failed: Incorrect output from optimization function.")
-#}
