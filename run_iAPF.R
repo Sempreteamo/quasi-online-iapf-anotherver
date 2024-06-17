@@ -10,7 +10,7 @@ run_iAPF <- function(model, data, Napf){
   for(index in 1:2){
     combined <- array(NA, dim = c(Napf, Time, d))
     cat('index=', index)
-    #psi_pa1 = NULL
+    psi_pa1 = NULL
     #ancestors1 = NULL
     #w_apf1 = NULL
     
