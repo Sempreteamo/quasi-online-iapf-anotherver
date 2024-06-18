@@ -1,7 +1,15 @@
-#x = X_apf[t,,]
-#lfn = log(psi[t,])
-
-optimization <- function(x, lfn){
+#' Function to optimize the Gaussian twisting function parameters
+#'
+#'This function takes a collection of particle locations and the associated value of the log target 
+#'function evaluated at those points and fits a Gaussian twisting function via the controlled SMC approach.
+#'
+#' @param x Locations
+#' @param lfn Log function value
+#'
+#' @return Twisting function parameters
+#' @export
+#'
+optimize_psi <- function(x, lfn){
   params <- vector()
   d <- dim(x)[2]
   
