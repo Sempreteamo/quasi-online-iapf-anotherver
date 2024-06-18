@@ -1,15 +1,25 @@
-#N=N[l], x = X_apf[t,,]
-
+#' Function to learn twisting psi function parameters
+#'
+#'This function takes a collection of particle locations and calculates twisting psi function arguments.
+#'
+#' @param x A collection of particle locations
+#' @param obs Observations
+#' @param model List containing model parameters
+#'
+#' @return Twisting psi function parameters
+#' @export
+#'
 learn_psi <- function(x, obs, model){
-  Time <- nrow(obs)
-  d <- model$d
-  N <- dim(x)[2]
+  output <- dim(X_apf)
+  Time <- output[1]
+  N <- output[2]
+  d <- output[3]
   psi <- matrix(NA, nrow = Time, ncol = N)
   psi_pa <- matrix(NA, nrow = Time, ncol = 2*d)
   
   #calculate psi
   for(t in Time:1){
-    #print(t)
+
     if(t == Time){
       for(i in 1:N){
         dif <- x[t, i,] - obs[t,]
@@ -24,15 +34,12 @@ learn_psi <- function(x, obs, model){
         
         psi[t,i] <- exp(evaluate_log_g(model, x[t,i,], obs[t,]))*
           exp(evaluate_psi_tilde(x[t,i,], psi_pa[t+1, ], model))
-          
-          #(2*pi)^(-d/2)*prod(psi_pa[t+1, (d+1):(d+d)]+1)^(-1/2)*
-          #exp(-(1/2)*t(A%*%x[t,i,] - psi_pa[t+1, 1:d])%*%diag((psi_pa[t+1, (d+1):(d+d)]+diag(B))^(-1), nrow=d,ncol=d)%*%
-           #     (A%*%x[t,i,] - psi_pa[t+1, 1:d]) )
+  
         
       }
     }
     
-    psi_pa[t,] <- optimization(x[t,,], log(psi[t,]))
+    psi_pa[t,] <- optimize_psi(x[t,,], log(psi[t,]))
     
     
     #print(psi_pa[t, 1:d])
