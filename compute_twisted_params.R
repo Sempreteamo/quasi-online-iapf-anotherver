@@ -1,5 +1,15 @@
-# params <- list(dist_mu, dist_cov)
-# psi <- psi_pa[t,]
+#' Function to compute the parameters of a twisting Gaussian mixture distribution 
+#'
+#'This function takes the parameters of a Gaussian mixture distribution and 
+#'a Gaussian twisting function and returns the parameters of the corresponding twisted distribution 
+#'obtained by multiplying the two together and renormalizing.
+
+#' @param params List of Gaussian mixture parameters
+#' @param psi Parameters of the twisting function
+#'
+#' @return List of twisted Gaussian mixture parameters
+#' @export
+#'
 compute_twisted_params <- function(params, psi){
   d <- length(psi)/2
   dist_mu <- params$mean
@@ -15,7 +25,3 @@ compute_twisted_params <- function(params, psi){
   
   return(params = list(mu, cov))
 }
-
-#test: 
-#psi <- rnorm(2*d)
-#compute_twisted_initial_params(params, psi)
