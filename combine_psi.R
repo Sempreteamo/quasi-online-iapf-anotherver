@@ -7,7 +7,7 @@
 #' @param psi Parameters of the psi functions
 #' @param index Indicator of which psi is preferred at each time 
 #'
-#' @return List of preferred psi function arguments
+#' @return Preferred psi function arguments
 #' 
 #' @export
 #'
