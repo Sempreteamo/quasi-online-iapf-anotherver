@@ -1,4 +1,23 @@
-run_psi_APF <- function(model, data, N, psi_pa, init){ #purely filtering particles
+#' Function of psi_APF
+#' 
+#' This function performs sampling and resampling procedures of 
+#' psi-Auxiliary Particle Filter with κ-adaptive resampling
+#'
+#' @param model List containing model parameters
+#' @param data List containing time series on which to run the filter
+#' @param N Number of particles to use
+#' @param psi_pa Parameters of the twisting function
+#' @param init 
+#'
+#' @return A list containing:
+#' x is the particle set generated during the sampling and resampling approach
+#' w is the weights of particles
+#' ancestors is indices associated with every resampling event
+#' logZ is normalizing constant estimate
+#' 
+#' @export
+#'
+run_psi_APF <- function(model, data, N, psi_pa, init){ 
   ini_mu <- model$ini_mu
   ini_cov <- model$ini_cov
   A <- model$A
@@ -17,17 +36,17 @@ run_psi_APF <- function(model, data, N, psi_pa, init){ #purely filtering particl
   X <- array(NA, dim = c(Time, N, d))
   w <- matrix(NA, Time, N)
   logZ <- 0
-  #print('start')
   
+  #'init' controls the the condition where we conduct the initialization
   if(init){
     if(breaks[1] == 1){
-      #set.seed(1234)
+      #the first block. break controls which block the algorithm is running
+      
       X[1,,] <- rnorm(N*d)  
       for(i in 1:N){
         w[1,i] <- evaluate_log_g(model, X[1,i,], obs[1,])  
       }
       
-      #print('finish 1')
       
     }else{
       
@@ -45,8 +64,7 @@ run_psi_APF <- function(model, data, N, psi_pa, init){ #purely filtering particl
         
         ancestors[t,] <- resample(w[t-1,], mode = 'multi')
         logZ = logZ + normalise_weights_in_log_space(w[t-1,])[[2]]
-        # at the initialization stage, we want filtering particles for psi
-        #set.seed(1234)
+        
         for(i in 1:N){
           
           X[t,i,] <- rmvn(1, A%*%X[t-1, ancestors[t,i],], B)
@@ -54,7 +72,6 @@ run_psi_APF <- function(model, data, N, psi_pa, init){ #purely filtering particl
         }
         
       }else{
-        #set.seed(1234)
         ancestors[t,] <- ancestors[t-1,] 
         for(i in 1:N){
           X[t,i,] <- rmvn(1, A%*%X[t-1, i,], B)
@@ -63,22 +80,20 @@ run_psi_APF <- function(model, data, N, psi_pa, init){ #purely filtering particl
       }
     }
     
-    #print('finish 2')
     
     logZ <- logZ + normalise_weights_in_log_space(w[Time,])[[2]]
     
   }else{
     if(breaks[1] == 1){
-      
+    
       X[1,,] <- sample_twisted_initial(list(mean = ini_mu, cov = ini_cov), psi_pa[1,], N)
       
       for(i in 1:N){
         w[1,i] <- eval_twisted_potential(model, list(psi_pa[1,], psi_pa[2,], psi_pa[1,]), X[1,i,], obs[1,])
       }
       
-      #print('finish  1 plus')
     }else{
-      #adjust the weights -- might need a single function
+      
       w_adj <- vector()
       
       for(i in 1:N){
@@ -106,7 +121,7 @@ run_psi_APF <- function(model, data, N, psi_pa, init){ #purely filtering particl
         logZ = logZ + normalise_weights_in_log_space(w[t-1,])[[2]]
         
         for(i in 1:N){
-          #filtering particles
+          
           X[t,i,] <- sample_twisted_transition(X[t-1, ancestors[t,i],], model, psi_pa[t,], 1)
           w[t,i] <- eval_twisted_potential(model, list(NA, psi_pa[t+1,], psi_pa[t,]), X[t,i,], obs[t,])
           
@@ -114,14 +129,13 @@ run_psi_APF <- function(model, data, N, psi_pa, init){ #purely filtering particl
       }else{
         ancestors[t,] <- ancestors[t-1,]
         for(i in 1:N){
-          #filtering particles
+          
           X[t,i,] <- sample_twisted_transition(X[t-1, i,], model, psi_pa[t,], 1)
           w[t,i] <- w[t-1,i] + eval_twisted_potential(model, list(NA, psi_pa[t+1,], psi_pa[t,]), X[t,i,], obs[t,])
         }
       }
       
     }
-    #print('finish 2 plus')
    
     t = Time
     
@@ -139,13 +153,12 @@ run_psi_APF <- function(model, data, N, psi_pa, init){ #purely filtering particl
     }else{
       ancestors[t,] <- ancestors[t-1,]
       for(i in 1:N){
-        #filtering particles
+        
         X[t,i,] <- sample_twisted_transition(X[t-1, i,], model, psi_pa[t,], 1)
         w[t,i] <- w[t-1,i] + eval_twisted_potential(model, list(NA, NA, psi_pa[t,]), X[t,i,], obs[t,])
       }
     }
     
-    #print('finish Time plus')
     logZ <- logZ + normalise_weights_in_log_space(w[Time,])[[2]] 
   }
   
@@ -154,3 +167,4 @@ run_psi_APF <- function(model, data, N, psi_pa, init){ #purely filtering particl
   
   return(list(X, w, logZ, ancestors))
 }
+#' @import mvnfast
