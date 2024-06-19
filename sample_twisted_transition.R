@@ -1,6 +1,6 @@
 #' Function to sample from a twisted transition distribution
 #'
-#'This function samples from a twisted transition distribution specified as a Gaussian mixture model.
+#' This function samples from a twisted transition distribution specified as a Gaussian mixture model.
 
 #' @param x Initial states that one-step-ahead of the states we want to sample
 #' @param model List containing model parameters
