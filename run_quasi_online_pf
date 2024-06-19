@@ -63,19 +63,20 @@ run_quasi_online_pf <- function(model, data, lag, Napf, N){
     }
   }
   
-  # Call the function to find rows where elements differ from the previous row
-  different_rows <- find_different_rows(ancestors)
-  logZ = 0
-  for(t in c(different_rows, Time)){
-    logZ <- logZ + normalise_weights_in_log_space(w[t-1,])[[2]] 
-  }
-  
-  
-  
-  log_ratio <- compute_log_ratio(logZ, model, data)
-  
-  return(list(X = X, w = w, logZ = logZ, log_ratio = log_ratio))
+  return(list(X = X, w = w, logZ = logZ, Xs = Xs))
 }
+
+#new funtcion
+# Call the function to find rows where elements differ from the previous row
+different_rows <- find_different_rows(ancestors)
+logZ = 0
+for(t in c(different_rows)){
+  logZ <- logZ + normalise_weights_in_log_space(w[t-1,])[[2]] 
+}
+logZ <- logZ + normalise_weights_in_log_space(w[Time,])[[2]] 
+
+
+log_ratio <- compute_log_ratio(logZ, model, data)
 
 ratio <- vector()
 for (qq in 1:1) {
