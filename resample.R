@@ -1,12 +1,21 @@
-#logW = w[t-1,] or w[t-1,]
-#Z_apf = Z_apf[l]
-#N = N[l]
+#' Function to resample
+#'
+#'Carry out resampling by drawing the indices according to a specified vector of log weights 
+#'and the specified resampling scheme.
+#'
+#' @param mode Which resampling scheme to use. Now we support multivariate resampling and residual resampling.
+#' @param logW Log weights
+#'
+#' @return List of particle indices
+#' @export
+#'
 resample <- function(logW, mode = 'res'){
   
   N <- length(logW)
   w_ <- normalise_weights_in_log_space(logW)[[1]]
   
   if(mode == 'multi'){
+    
     indices <- sample(1:N, N, replace = TRUE, prob = w_)
     return(indices)
     
