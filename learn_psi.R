@@ -10,7 +10,7 @@
 #' @export
 #'
 learn_psi <- function(x, obs, model){
-  output <- dim(X_apf)
+  output <- dim(x)
   Time <- output[1]
   N <- output[2]
   d <- output[3]
