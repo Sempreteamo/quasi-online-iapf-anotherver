@@ -28,6 +28,8 @@ model <- list(ini_mu = ini, ini_cov = ini_c, A = a, B = b, C = c, D = D_, k = k_
 
 obs_ <- sample_obs(model, Time)
 
+
+
 output <- generate_blocks(lag, Time)
 breaks_ <- output[[1]] 
 psi_index_ <- output[[2]]
@@ -63,24 +65,33 @@ run_quasi_online_pf <- function(model, data, lag, Napf, N){
     }
   }
   
-  return(list(X = X, w = w, logZ = logZ, Xs = Xs))
+  #new funtcion
+  # Call the function to find rows where elements differ from the previous row
+  different_rows <- find_different_rows(ancestors)
+  logZ = 0
+  for(t in c(different_rows)){
+    logZ <- logZ + normalise_weights_in_log_space(w[t-1,])[[2]] 
+  }
+  logZ <- logZ + normalise_weights_in_log_space(w[Time,])[[2]] 
+  
+  output2 <- compute_filtering(model, data)
+  fkf.obj <- output2[[1]]
+  fks.obj <- output2[[2]]
+  
+  KS_dist <- compute_dKS(X[Time,,], w[Time,], fks.obj)
+  
+  log_ratio <- compute_log_ratio(logZ, fkf.obj)
+  
+  return(list(X = X, w = w, logZ = logZ, Xs = Xs, log_ratio = log_ratio, KS_dist = KS_dist))
 }
 
-#new funtcion
-# Call the function to find rows where elements differ from the previous row
-different_rows <- find_different_rows(ancestors)
-logZ = 0
-for(t in c(different_rows)){
-  logZ <- logZ + normalise_weights_in_log_space(w[t-1,])[[2]] 
-}
-logZ <- logZ + normalise_weights_in_log_space(w[Time,])[[2]] 
 
-
-log_ratio <- compute_log_ratio(logZ, model, data)
 
 ratio <- vector()
+dist <- vector()
 for (qq in 1:1) {
   set.seed(qq*2)
-  ratio[qq] <- run_quasi_online_pf(model, data, lag, Napf, N)[[4]]
+  ratio[qq] <- run_quasi_online_pf(model, data, lag, Napf, N)[[5]]
+  dist[qq] <- run_quasi_online_pf(model, data, lag, Napf, N)[[6]]
 }
 
